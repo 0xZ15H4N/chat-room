@@ -18,7 +18,7 @@ TO DO :
                         |
                         |-> for it will send a single on dedicated port on the range of IP from 0-255
                         |
-                        |-> if recieve a response from a ip , then i will connect to it.
+                        |-> if recieve a response from a ip , then it will connect to it.
                   
       
       2 ) update the logic to add an Authentication (password) for cient to enter the chat
