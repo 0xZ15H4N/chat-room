@@ -18,3 +18,8 @@ TO DO :
       
       2 ) update the logic to add an Authentication (password) for cient to enter the chat
       
+      
+     
+FUTURE GOAL :
+        
+        Creating an java based application using java.awt .      
