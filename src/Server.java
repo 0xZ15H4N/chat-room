@@ -1,28 +1,23 @@
 import java.io.*;
 import java.net.*;
 import java.util.*;
-
 public class Server {
     private static final List<ClientHandler> clients = new ArrayList<>();
-
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(6666)) {
             Color.it("Group Chat Server started on port 6666...", "yellow");
-
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 Color.it("New client connected: " + clientSocket, "green");
-
                 ClientHandler handler = new ClientHandler(clientSocket);
                 clients.add(handler);
                 new Thread(handler).start();
             }
-
-        } catch (IOException e) {
+        }catch (IOException e) {
             Color.err(e);
         }
     }
-
+    
     static void broadcast(String msg, ClientHandler sender) {
         for (ClientHandler client : clients) {
             if (client != sender) {
@@ -32,7 +27,7 @@ public class Server {
     }
 
     static void remove(ClientHandler client) {
-        clients.remove(client);
+        clients.remove(client); // remove client from the array list!
     }
 }
 
@@ -52,7 +47,8 @@ class ClientHandler implements Runnable {
     public void run() {
         try {
             out.writeUTF("Welcome " + name + "! Type 'exit' to leave.");
-
+            Server.broadcast("New User connected "+this.name,this);
+            
             while (true) {
                 String msg = in.readUTF();
                 if (msg.equalsIgnoreCase("exit")) {
@@ -70,17 +66,16 @@ class ClientHandler implements Runnable {
                 in.close();
                 out.close();
                 socket.close();
-                Server.broadcast("Disconnected "+this.name, this);
-                Color.it(name + " Disconnected.", "red");
+                Server.broadcast("Disconnected "+this.name, this); // send the broad cast signalling every one that the "user-Port" is  disconnecteed
+                Color.it(name + " Disconnected.", "red"); 
             } catch (IOException e) {
                 Color.err(e);
             }
         }
     }
-
     public void send(String msg) {
         try {
-            out.writeUTF(msg);
+            out.writeUTF(msg); // this message is going to the server , and the server is then sending the code to the other 
         } catch (IOException e) {
             Color.err(e);
         }
