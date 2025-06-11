@@ -30,22 +30,21 @@ public class Server {
         }
 
         try (ServerSocket serverSocket = new ServerSocket(6666)) {
-            Color.it("Group Chat Server started on port 6666...", "yellow");
+            Color.it("Group Chat Server started on port 6666...\n", "yellow");
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                Color.it("New client Trying to connect: " + clientSocket, "Purple");
+                Color.it("\nNew client Trying to connect: " + clientSocket+"\n", "Purple");
                 ClientHandler handler = new ClientHandler(clientSocket);
                 handler.out.writeUTF(Banner + "\n"+"Enter the secret Password : ");
                 String Password = handler.in.readUTF();
                 if(Password.equals(password)){  
                     clients.add(handler);
                     new Thread(handler).start();
-                    Color.it("New client connected: " + clientSocket, "green");
+                    Color.it("\nNew client connected: " + clientSocket, "green");
                 
                 }else{
-                    handler.out.writeUTF("***Authentication Failed!***");
-                    Color.it(clientSocket+" Authentication Failed!", "RED");
-                    clientSocket.close();
+                    handler.out.writeUTF("\n***Authentication Failed!***");
+                    Color.it("\n"+clientSocket+" Authentication Failed!", "RED");
                 }
             }
         }catch (IOException e) {
@@ -81,15 +80,15 @@ class ClientHandler implements Runnable {
 
     public void run() {
         try {
-            out.writeUTF("Welcome " + name + "! Type 'exit' to leave.");
-            Server.broadcast("New User connected "+this.name,this);
+            out.writeUTF("\nWelcome " + name + "! Type 'exit' to leave.\n");
+            Server.broadcast("\nNew User connected "+this.name+"\n",this);
             
             while (true) {
                 String msg = in.readUTF();
                 if (msg.equalsIgnoreCase("exit")) {
                     break;
                 }
-                String formatted =name + ": " + msg;
+                String formatted ="\n"+name + ": " + msg+"\n";
                 Color.it(formatted, "blue");
                 Server.broadcast(formatted, this);
             }
@@ -101,8 +100,8 @@ class ClientHandler implements Runnable {
                 in.close();
                 out.close();
                 socket.close();
-                Server.broadcast("Disconnected "+this.name, this); // send the broad cast signalling every one that the "user-Port" is  disconnecteed
-                Color.it(name + " Disconnected.", "red"); 
+                Server.broadcast("\n Disconnected "+this.name+"\n", this); // send the broad cast signalling every one that the "user-Port" is  disconnecteed
+                Color.it("\n"+name + " Disconnected."+"\n", "red"); 
             } catch (IOException e) {
                 Color.err(e);
             }

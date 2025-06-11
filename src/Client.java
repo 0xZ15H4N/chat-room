@@ -18,7 +18,7 @@ public class Client {
                     in = new DataInputStream(socket.getInputStream());
                     out = new DataOutputStream(socket.getOutputStream());
                     sc = new Scanner(System.in);
-                    Color.it("Connected to group chat!", "green");
+                    Color.it("\nConnected to group chat!", "green");
                     break;
                 } catch (IOException e) {
                     // Ignore and try next IP
@@ -26,7 +26,7 @@ public class Client {
             }
 
             if (socket == null) {
-                Color.it("Could not connect to any server.", "red");
+                Color.it("\nCould not connect to any server.", "red");
                 return;
             }
 
@@ -35,7 +35,7 @@ public class Client {
                 try {
                     while (true) {
                         String msg = finalIn.readUTF();
-                        Color.it(msg, "purple");
+                        Color.it("\n"+msg+"\n", "purple");
                     }
                 } catch (IOException e) {
                     Color.err(e);
@@ -47,7 +47,7 @@ public class Client {
                 Color.it("> ", "cyan");
                 String msg = sc.nextLine();
                 out.writeUTF(msg);
-                if (msg.equalsIgnoreCase("exit")) break;
+                if (msg.strip().equalsIgnoreCase("exit")) break;
             }
 
         } catch (IOException e) {
