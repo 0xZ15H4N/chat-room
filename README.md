@@ -8,8 +8,8 @@ A small multi threaded chat room that works on LAN !
 
   and after that you can run Client file one by one to connect 
      ` java Client ` 
+![image](https://github.com/user-attachments/assets/f845bb18-10ac-4815-b8c8-833fcc6bb736)
 
-  ![image](https://github.com/user-attachments/assets/4a89cb04-68d1-41bf-8675-7726180cb00f)
 
 
 TO DO :
