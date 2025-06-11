@@ -5,6 +5,22 @@ public class Server {
     private static final List<ClientHandler> clients = new ArrayList<>();
     public static void main(String[] args) {
         String password = null;
+        final String Banner = """
+                    .-"      "-.
+                   /            \\
+       _          |              |          _
+      ( \\         |,  .-.  .-.  ,|         / )
+       > "=._     | )(__/  \\__)( |     _.=" <
+      (_/"=._"=._ |/     /\\     \\| _.="_.="\\_)
+             "=._ (_     ^^     _)"_.="
+                 "=\\__|IIIIII|__/="
+                _.="| \\IIIIII/ |"=._
+      _     _.="_.="\\          /"=._"=._     _
+     ( \\_.="_.="     `--------`     "=._"=._/ )
+      > _.="                            "=._ <
+     (_/                                    \\_)
+            ☠ WELCOME TO THE CHATROOM ☠
+""";
 
         try{
             password = new BufferedReader(new FileReader("pass.txt")).readLine().split(":")[1];
@@ -19,7 +35,7 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 Color.it("New client Trying to connect: " + clientSocket, "Purple");
                 ClientHandler handler = new ClientHandler(clientSocket);
-                handler.out.writeUTF("Enter the secret Password : ");
+                handler.out.writeUTF(Banner + "\n"+"Enter the secret Password : ");
                 String Password = handler.in.readUTF();
                 if(Password.equals(password)){  
                     clients.add(handler);
