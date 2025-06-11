@@ -4,14 +4,33 @@ import java.util.*;
 public class Server {
     private static final List<ClientHandler> clients = new ArrayList<>();
     public static void main(String[] args) {
+        String password = null;
+
+        try{
+            password = new BufferedReader(new FileReader("pass.txt")).readLine().split(":")[1];
+        
+        }catch(Exception e){
+            Color.err(e);
+        }
+
         try (ServerSocket serverSocket = new ServerSocket(6666)) {
             Color.it("Group Chat Server started on port 6666...", "yellow");
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                Color.it("New client connected: " + clientSocket, "green");
+                Color.it("New client Trying to connect: " + clientSocket, "Purple");
                 ClientHandler handler = new ClientHandler(clientSocket);
-                clients.add(handler);
-                new Thread(handler).start();
+                handler.out.writeUTF("Enter the secret Password : ");
+                String Password = handler.in.readUTF();
+                if(Password.equals(password)){  
+                    clients.add(handler);
+                    new Thread(handler).start();
+                    Color.it("New client connected: " + clientSocket, "green");
+                
+                }else{
+                    handler.out.writeUTF("***Authentication Failed!***");
+                    Color.it(clientSocket+" Authentication Failed!", "RED");
+                    clientSocket.close();
+                }
             }
         }catch (IOException e) {
             Color.err(e);
@@ -32,10 +51,10 @@ public class Server {
 }
 
 class ClientHandler implements Runnable {
-    private final Socket socket;
-    private final DataInputStream in;
-    private final DataOutputStream out;
-    private String name;
+    final Socket socket;
+    final DataInputStream in;
+    final DataOutputStream out;
+    String name;
 
     public ClientHandler(Socket socket) throws IOException {
         this.socket = socket;
@@ -54,7 +73,7 @@ class ClientHandler implements Runnable {
                 if (msg.equalsIgnoreCase("exit")) {
                     break;
                 }
-                String formatted = name + ": " + msg;
+                String formatted =name + ": " + msg;
                 Color.it(formatted, "blue");
                 Server.broadcast(formatted, this);
             }

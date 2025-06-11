@@ -17,7 +17,7 @@ public class Color {
             case "CYAN" -> CYAN;
             default -> RESET;
         };
-        System.out.print(color + str + RESET);
+        System.out.println(color + str + RESET);
     }
 
     public static void prompt(String symbol) {

@@ -4,18 +4,37 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
-        try (Socket socket = new Socket("localhost", 6666);
-             DataInputStream in = new DataInputStream(socket.getInputStream());
-             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-             Scanner sc = new Scanner(System.in)) {
 
-            Color.it("Connected to group chat!", "green");
+        Socket socket = null;
+        DataInputStream in = null;
+        DataOutputStream out = null;
+        Scanner sc = null;
 
-            // Thread for reading messages
+        try {
+            for (int i = 0; i < 256; i++) {
+                try {
+                    socket = new Socket();
+                    socket.connect(new InetSocketAddress("192.168.1." + i, 6666), 100); // 200 ms timeout
+                    in = new DataInputStream(socket.getInputStream());
+                    out = new DataOutputStream(socket.getOutputStream());
+                    sc = new Scanner(System.in);
+                    Color.it("Connected to group chat!", "green");
+                    break;
+                } catch (IOException e) {
+                    // Ignore and try next IP
+                }
+            }
+
+            if (socket == null) {
+                Color.it("Could not connect to any server.", "red");
+                return;
+            }
+
+            DataInputStream finalIn = in;
             Thread reader = new Thread(() -> {
                 try {
                     while (true) {
-                        String msg = in.readUTF();
+                        String msg = finalIn.readUTF();
                         Color.it(msg, "purple");
                     }
                 } catch (IOException e) {
@@ -24,8 +43,6 @@ public class Client {
             });
 
             reader.start();
-
-            // Writing messages
             while (true) {
                 Color.it("> ", "cyan");
                 String msg = sc.nextLine();
