@@ -3,6 +3,7 @@ A small multi threaded chat room that works on LAN !
   To complile just navigate to ./src
     ` javac Color.java Server.java Client.java `
 
+  secondly add a password by doining into the src dir , and updatd the pass.txt after password: with your password , this will allow only trusted clients to connect and talk
   and after that first run 
     ` java Server ` 
 
